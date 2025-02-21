@@ -1,0 +1,7 @@
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.AssemblyReference.cache
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\HAPPYY\Desktop\멋사\study\c#\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
