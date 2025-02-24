@@ -24,7 +24,7 @@ namespace TodayTesk1
 
             Console.Clear();
 
-            string[] texts = {
+            string[] texts = {캡처도구 녹화 안됨
                 "엔터를 치면 이야기가 시작됩니다.",
                 "당신은 유명한 탐정으로, 어느 날 의문의 편지를 받습니다.",
                 "그 편지는 여러 탐정들을 초대하는 초대장이었습니다.",
