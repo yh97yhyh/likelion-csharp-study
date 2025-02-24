@@ -16,15 +16,15 @@ namespace study8
             //if (score >= 90)
             //{
             //    Console.WriteLine("A 학점");
-            //} 
+            //}
             //else if (score >= 80)
             //{
             //    Console.WriteLine("B학점");
-            //} 
+            //}
             //else if (score >= 70)
             //{
             //    Console.WriteLine("C학점");
-            //} 
+            //}
             //else
             //{
             //    Console.WriteLine("F학점");
