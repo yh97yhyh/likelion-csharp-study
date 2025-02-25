@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace study10
@@ -86,6 +87,43 @@ namespace study10
             //    Console.WriteLine($"count: {c}");
             //    c++;
             //}
+
+            // 랜덤
+            //Random rand = new Random();
+            //for (int i = 0; i<10; i++)
+            //{
+            //    //int randomNumber = rand.Next(0, 10); // 0~9
+            //    double randomNumber = rand.NextDouble();
+            //    Console.WriteLine($"랜덤수 : {randomNumber}");
+            //}
+
+            // 대장장이 키우기
+            // 도끼등급 sss     10%
+            // 도끼등급 ss      30%
+            // 도끼등급 s       60%
+            Console.WriteLine("=== 대장장이 키우기 - 도끼 뽑기 ===");
+            Random rand = new Random();
+            int prob = 0;
+
+            for(int i=0; i<20; i++)
+            {
+                prob = rand.Next(1, 101); // 1~100
+
+                if (prob <= 10)
+                {
+                    Console.WriteLine("도끼등급 sss");
+                }
+                else if (prob <= 40)
+                {
+                    Console.WriteLine("도끼등급 ss");
+                }
+                else
+                {
+                    Console.WriteLine("도끼등급 s");
+                }
+
+                Thread.Sleep(500); // 0.5초
+            }
         }
     }
 }
