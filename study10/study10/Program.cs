@@ -75,6 +75,17 @@ namespace study10
             //    //Console.WriteLine($"숫자: {i}");
             //}
             //Console.WriteLine($"합: {sum}");
+
+            //int c = 1;
+            //while (true) {
+            //    if (c > 5)
+            //    {
+            //        break;
+            //    }
+
+            //    Console.WriteLine($"count: {c}");
+            //    c++;
+            //}
         }
     }
 }
