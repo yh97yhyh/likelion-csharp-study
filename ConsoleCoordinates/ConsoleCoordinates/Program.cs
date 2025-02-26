@@ -36,14 +36,6 @@ namespace ConsoleCoordinates
             Thread.Sleep(3000);
             Console.Clear();
 
-            //for (int x = 0; x < 40; x++)
-            //{
-            //    Console.Clear();
-            //    Console.SetCursorPosition(x, 10);
-            //    Console.Write("◎");
-            //    Thread.Sleep(100);
-            //}
-
             Random rand = new Random();
 
             Console.WriteLine("wsad로 이동하여 타겟(★)을 맞춰주세요!");
