@@ -8,6 +8,42 @@ using System.Threading.Tasks;
 
 namespace ShootingGame
 {
+
+    struct Player
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string[] Shape { get; set; }
+
+        public Player(int x, int y)
+        {
+            X = x;
+            Y = y;
+            Shape = new string[] { "->", ">>>", "->" };
+        }
+
+        public void HandleKeyInfo(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow: if (Y > 0) Y--; break;
+                case ConsoleKey.DownArrow: if (Y < Console.WindowHeight - Shape.Length) Y++; break;
+                case ConsoleKey.LeftArrow: if (X > 0) X--; break;
+                case ConsoleKey.RightArrow: if (X < Console.WindowWidth - 3) X++; break;
+                case ConsoleKey.Spacebar: Console.SetCursorPosition(X + 3, Y + 1);  Console.Write("🔹"); break;
+            }
+        }
+
+        public void Draw()
+        {
+            for (int i = 0; i < Shape.Length; i++)
+            {
+                Console.SetCursorPosition(X, Y + i);
+                Console.WriteLine(Shape[i]);
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -16,51 +52,27 @@ namespace ShootingGame
             Console.SetWindowSize(80, 25);
             Console.SetBufferSize(80, 25);
             Console.CursorVisible = false;
-
             var keyInfo = new ConsoleKeyInfo();
-            //int x = 10, y = 10;
-            int playerX = 0;
-            int playerY = 12;
-            var player = new string[]
-            {
-                "->",
-                ">>>",
-                "->"
-            }; // 배열 문자열로 그리기
 
-            var stopwatch = new Stopwatch(); // 루프 활용
+            var player = new Player(0, 12);
+
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
-
             long prevSecond = stopwatch.ElapsedMilliseconds;
 
             while (true)
             {
-
                 long currentSecond = stopwatch.ElapsedMilliseconds;
                 
-                if(currentSecond - prevSecond >= 500)
+                if(currentSecond - prevSecond >= 100)
                 {
-                    //Console.WriteLine("루프");
+                    keyInfo = Console.ReadKey(true); 
                     Console.Clear();
 
-                    keyInfo = Console.ReadKey(true); // 키 입력 받기
-                    switch (keyInfo.Key)
-                    {
-                        case ConsoleKey.UpArrow: if (playerY > 0) playerY--; break;
-                        case ConsoleKey.DownArrow: if (playerY < Console.WindowHeight - 3) playerY++; break;
-                        case ConsoleKey.LeftArrow: if (playerX > 0) playerX--; break;
-                        case ConsoleKey.RightArrow: if (playerX < Console.WindowWidth - 3) playerX++; break;
-                        case ConsoleKey.Spacebar: Console.SetCursorPosition(playerX + 3, playerY + 1);  Console.Write("🔹"); break;
-                        case ConsoleKey.Escape: return;
-                    }
+                    player.HandleKeyInfo(keyInfo);
+                    player.Draw();
 
-                    for (int i = 0; i < player.Length; i++) // 플레이어 그리기
-                    {
-                        Console.SetCursorPosition(playerX, playerY + i);
-                        Console.WriteLine(player[i]);
-                    }
-
-                    prevSecond = currentSecond; // 이전 시간 업데이트
+                    prevSecond = currentSecond;
                 }
 
             }

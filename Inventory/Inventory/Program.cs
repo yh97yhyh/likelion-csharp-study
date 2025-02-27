@@ -3,61 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Inventory
 {
-    class Program
+
+    struct Inventory
     {
-        const int MAX_ITEMS = 10;
+        public int MexItemCount { get; set; }
+        public Item[] Items { get; set; }
 
-        static string[] itemNames = new string[MAX_ITEMS];
-        static int[] itemCounts = new int[MAX_ITEMS];
-
-        static void Main(string[] args)
+        public Inventory(int maxItemCount)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            var sword = "🗡️ 칼";
-            var potion = "🧪 포션";
-            var shield = "🛡️ 방패";
-
-            AddItem(potion, 5);
-            AddItem(sword, 1);
-            AddItem(potion, 3);
-            ShowInventory();
-
-            Console.WriteLine("- 포션 2개 사용!");
-            RemoveItem(potion, 2);
-            ShowInventory();
-
-            Console.WriteLine("- 방패 1개 제거 시도");
-            RemoveItem(shield, 1);
-            ShowInventory();
-
-            Console.WriteLine("- 포션 6개 사용(초과 사용 테스트)");
-            RemoveItem(potion, 7);
-            ShowInventory();
-    
-
+            MexItemCount = maxItemCount;
+            Items = new Item[maxItemCount];
         }
 
-        static void AddItem(string name, int count)
+        public void AddItem(string name, int count)
         {
-            for(int i=0; i<MAX_ITEMS; i++)
+            for (int i = 0; i < MexItemCount; i++)
             {
-                if (itemNames[i] == name) // 이미 있는 아이템이면 개수 증가
+                if (Items[i].Name == name)
                 {
-                    itemCounts[i] += count;
+                    Items[i].Count += count;
                     return;
                 }
             }
 
-            for(int i=0; i<MAX_ITEMS; i++)
+            for (int i = 0; i < MexItemCount; i++)
             {
-                if (itemNames[i] == null) // 빈 슬롯에 새로운 아이템 추가
+                if (Items[i].Name == null)
                 {
-                    itemNames[i] = name;
-                    itemCounts[i] = count;
+                    Items[i].Name = name;
+                    Items[i].Count = count;
                     return;
                 }
             }
@@ -65,18 +43,18 @@ namespace Inventory
             Console.WriteLine("인벤토리가 가득 찼습니다.");
         }
 
-        static void RemoveItem(string name, int count)
+        public void RemoveItem(string name, int count)
         {
-            for(int i=0; i<MAX_ITEMS; i++)
+            for (int i = 0; i < MexItemCount; i++)
             {
-                if (itemNames[i] == name) // 해당 아이템 찾기
+                if (Items[i].Name == name)
                 {
-                    if (itemCounts[i] >= count) // 개수가 충분하면 차감
+                    if (Items[i].Count >= count) 
                     {
-                        itemCounts[i] -= count;
-                        if (itemCounts[i] == 0) // 개수가 0이면 삭제
+                        Items[i].Count -= count;
+                        if (Items[i].Count == 0) 
                         {
-                            itemNames[i] = null;
+                            Items[i].Name = null;
                         }
                         return;
                     }
@@ -91,20 +69,20 @@ namespace Inventory
             Console.WriteLine("아이템을 찾을 수 없습니다!");
         }
 
-        static void ShowInventory()
+        public void ShowInventory()
         {
-            Console.WriteLine("========== 현재 인벤토리 ==========");
+            Console.WriteLine("┌───────────현재 인벤토리───────────┐");
             bool isEmpty = true;
 
-            for(int i=0; i<MAX_ITEMS; i++)
+            for (int i = 0; i < MexItemCount; i++)
             {
-                if (itemNames[i] != null)
+                if (Items[i].Name != null)
                 {
-                    Console.WriteLine($"{itemNames[i]} (x{itemCounts[i]})");
+                    Console.WriteLine($" {Items[i].Name} (x{Items[i].Count})");
                     isEmpty = false;
                 }
             }
-            Console.WriteLine("===================================");
+            Console.WriteLine("└───────────────────────────────────┘");
 
             if (isEmpty)
             {
@@ -112,6 +90,42 @@ namespace Inventory
             }
 
             Console.WriteLine();
+        }
+    }
+    struct Item
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
+    }
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            var sword = "🗡️ 칼";
+            var potion = "🧪 포션";
+            var shield = "🛡️ 방패";
+
+            var inventory = new Inventory(10);
+
+            inventory.AddItem(potion, 5);
+            inventory.AddItem(sword, 1);
+            inventory.AddItem(potion, 3);
+            inventory.ShowInventory();
+
+            Console.WriteLine("- 포션 2개 사용!");
+            inventory.RemoveItem(potion, 2);
+            inventory.ShowInventory();
+
+            Console.WriteLine("- 방패 1개 제거 시도");
+            inventory.RemoveItem(shield, 1);
+            inventory.ShowInventory();
+
+            Console.WriteLine("- 포션 6개 사용(초과 사용 테스트)");
+            inventory.RemoveItem(potion, 7);
+            inventory.ShowInventory();
         }
     }
 }
