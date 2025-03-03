@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TypingGame
@@ -32,7 +33,6 @@ namespace TypingGame
             Setence = "";
             X = 0;
             Y = 0;
-            //IsVisible = false;
             IsClear = false;
         }
     }
@@ -63,7 +63,7 @@ namespace TypingGame
                 var x = Rand.Next(0, 80 - sentence.Length);
                 var sen = new Item(sentence, x, y);
                 Items.Add(sen);
-                y -= 3;
+                y -= 4;
             }
         }
 
@@ -78,7 +78,7 @@ namespace TypingGame
         {
             foreach(var item in Items)
             {
-                if (item.Y >= SKY_Y && item.Y < GROUND_Y)  
+                if ((item.Y >= SKY_Y && item.Y < GROUND_Y) && !item.IsClear)  
                 {
                     Console.SetCursorPosition(item.X, item.Y);
                     Console.WriteLine(item.Setence);
@@ -87,29 +87,74 @@ namespace TypingGame
             }
         }
 
-        public void GetUserInput()
+        //public async Task GetUserInputAsync()
+        //{
+        //    Console.SetCursorPosition(0, GROUND_Y + 1);
+        //    //Console.Write("Enter a sentence 👉 ");
+        //    //Console.SetCursorPosition(25, GROUND_Y + 1);
+        //    UserInput = await Task.Run(() => Console.ReadLine());
+        //    CheckClear();
+        //}
+
+        public async Task GetUserInputAsync()
         {
             Console.SetCursorPosition(0, GROUND_Y + 1);
-            UserInput = Console.ReadLine();
+
+            while (true)
+            {
+                var keyInfo = await Task.Run(() => Console.ReadKey(true));
+
+                if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    UserInput += keyInfo.KeyChar;
+                    Console.SetCursorPosition(UserInput.Length, GROUND_Y + 1);
+                    Console.Write(keyInfo.KeyChar);
+                }
+                //else if (keyInfo.Key == ConsoleKey.Backspace && UserInput.Length > 0)
+                //{
+                //    UserInput = UserInput.Substring(0, UserInput.Length - 1);
+                //    Console.SetCursorPosition(UserInput.Length, GROUND_Y + 1);
+                //    Console.Write(new string(' ', Console.WindowWidth));
+                //    Console.SetCursorPosition(UserInput.Length, GROUND_Y + 1);
+                //    Console.Write(UserInput);
+                //}
+            }
+
+            CheckClear();
         }
+
 
 
         public void CheckClear()
         {
+            Console.SetCursorPosition(0, GROUND_Y + 1);
+            Console.Write(new string(' ', Console.WindowWidth));
+
             foreach (var item in Items)
             {
                 if (item.Y >= SKY_Y && UserInput == item.Setence)
                 {
                     item.IsClear = true;
-                    Score += 100;
+                    Score += 1;
                     break;
                 }
             }
+
+            UserInput = "";
         }
 
         public void CheckGameOver()
         {
             var isGameOver = false;
+
+            if (Score >= Items.Count)
+            {
+                GameClear();
+            }
 
             foreach (var item in Items)
             {
@@ -122,27 +167,77 @@ namespace TypingGame
 
             if (isGameOver)
             {
-                Console.Clear();
-                Console.SetCursorPosition(0, 0);
-                Console.WriteLine("게임 종료!");
-                Environment.Exit(0);
+                GameOver();
             }
         }
 
         public void DrawUI()
         {
-            Console.SetCursorPosition(63, 0);
-            Console.Write("┏━━━━━━━━━━━━━━┓");
-            Console.SetCursorPosition(63, 1);
-            Console.Write("┃              ┃");
-            Console.SetCursorPosition(65, 1);
-            Console.Write("Score : " + Score);
-            Console.SetCursorPosition(63, 2);
-            Console.Write("┗━━━━━━━━━━━━━━┛");
+            Console.SetCursorPosition(60, 0);
+            Console.Write("┏━━━━━━━━━━━━━━━━━━┓");
+            Console.SetCursorPosition(60, 1);
+            Console.Write("┃                  ┃");
+            Console.SetCursorPosition(62, 1);
+            Console.Write($"🔥 Score : {Score}/{Items.Count}");
+            Console.SetCursorPosition(60, 2);
+            Console.Write("┗━━━━━━━━━━━━━━━━━━┛");
 
             Console.SetCursorPosition(0, 23);
             Console.Write("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
             Console.Write("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        }
+
+        public void Clear()
+        {
+            for (int y = 0; y < GROUND_Y; y++)
+            {
+                Console.SetCursorPosition(0, y);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+        }
+
+        private void GameOver()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+
+            Console.Write("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            for (int j = 1; j <= 10; j++)
+            {
+                if (j == 5)
+                {
+                    Console.SetCursorPosition(0, j);
+                    Console.Write($"┃                             😵‍💫   Game Over   😢                           ┃");
+                    continue;
+                }
+                Console.SetCursorPosition(0, j);
+                Console.Write("┃                                                                              ┃");
+            }
+            Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+            Environment.Exit(0);
+        }
+
+        private void GameClear()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+
+            Console.Write("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            for (int j = 1; j <= 10; j++)
+            {
+                if (j == 5)
+                {
+                    Console.SetCursorPosition(0, j);
+                    Console.Write($"┃                              🌟   Game Clear!  🥳                            ┃");
+                    continue;
+                }
+                Console.SetCursorPosition(0, j);
+                Console.Write("┃                                                                              ┃");
+            }
+            Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+            Environment.Exit(0);
         }
 
         private List<string> SetSentences()
@@ -159,26 +254,26 @@ namespace TypingGame
                 "Typing is a useful skill.",
                 "The rain in Spain falls mainly on the plain.",
                 "She sells seashells by the seashore.",
-                "A quick movement of the enemy will jeopardize six gunboats.",
-                "Jackdaws love my big sphinx of quartz.",
-                "I wish to wish the wish you wish to wish.",
-                "The five boxing wizards jump quickly.",
-                "Mr Jock, TV quiz PhD, bags few lynx.",
-                "Waltz, nymph, for quick jigs vex Bud.",
-                "The wizard quickly jinxed the gnomes before they vaporized.",
-                "Gazing at the vast sky, you think of flying.",
-                "A brown dog jumped over the wall.",
-                "The sun sets in the west.",
-                "Sly foxes jump over lazy dogs.",
-                "The mountains look beautiful at sunset.",
-                "The stars are shining brightly tonight.",
-                "Learning new things is always exciting.",
-                "The river flows quietly through the valley.",
-                "Reading books can expand your mind.",
-                "Music brings joy to our lives.",
-                "Hiking up the hill is a great way to stay healthy.",
-                "A peaceful mind leads to a happy life.",
-                "Inspiration can strike at any time."
+                //"A quick movement of the enemy will jeopardize six gunboats.",
+                //"Jackdaws love my big sphinx of quartz.",
+                //"I wish to wish the wish you wish to wish.",
+                //"The five boxing wizards jump quickly.",
+                //"Mr Jock, TV quiz PhD, bags few lynx.",
+                //"Waltz, nymph, for quick jigs vex Bud.",
+                //"The wizard quickly jinxed the gnomes before they vaporized.",
+                //"Gazing at the vast sky, you think of flying.",
+                //"A brown dog jumped over the wall.",
+                //"The sun sets in the west.",
+                //"Sly foxes jump over lazy dogs.",
+                //"The mountains look beautiful at sunset.",
+                //"The stars are shining brightly tonight.",
+                //"Learning new things is always exciting.",
+                //"The river flows quietly through the valley.",
+                //"Reading books can expand your mind.",
+                //"Music brings joy to our lives.",
+                //"Hiking up the hill is a great way to stay healthy.",
+                //"A peaceful mind leads to a happy life.",
+                //"Inspiration can strike at any time."
             };
 
             return sentences;
@@ -189,6 +284,8 @@ namespace TypingGame
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             Console.CursorVisible = false;
             Console.SetWindowSize(80, 25);
             Console.SetBufferSize(80, 25);
@@ -196,17 +293,78 @@ namespace TypingGame
             var game = new Game();
             var dwTime = Environment.TickCount;
 
+            var inputTask = game.GetUserInputAsync();
+
+            Console.Clear();
+            SplashGame();
+
             while (true)
             {
-                if (dwTime + 1000 >= Environment.TickCount)
+                if (dwTime + 1000 < Environment.TickCount)
                 {
-                    continue;
+                    dwTime = Environment.TickCount;
+                    game.Clear();
+
+                    game.GameMain();
                 }
 
-                dwTime = Environment.TickCount;
-                Console.Clear();
+                if (inputTask.IsCompleted)
+                {
+                    inputTask = game.GetUserInputAsync();
+                }
+            }
+        }
 
-                game.GameMain();
+        static void SplashGame()
+        {
+            var cnt = 0;
+            while (true)
+            {
+                Console.Write("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+                for (int j = 1; j <= 10; j++)
+                {
+                    var emoji = (cnt % 2 == 0) ? "💙" : "💛";
+                    if (j == 5)
+                    {
+                        Console.SetCursorPosition(0, j);
+                        Console.Write($"┃                              {emoji}   Typing Game   {emoji}                           ┃");
+                        continue;
+                    }
+                    Console.SetCursorPosition(0, j);
+                    Console.Write("┃                                                                              ┃");
+                }
+                Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+                Console.SetCursorPosition(15, 15);
+                Console.Write("┏━━━━━━━━━━━━━━━━━━━━┓");
+                Console.SetCursorPosition(15, 16);
+                Console.Write("┃ Enter : 게임 시작  ┃");
+                Console.SetCursorPosition(15, 17);
+                Console.Write("┗━━━━━━━━━━━━━━━━━━━━┛");
+
+                Console.SetCursorPosition(50, 15);
+                Console.Write("┏━━━━━━━━━━━━━━━━━━┓");
+                Console.SetCursorPosition(50, 16);
+                Console.Write("┃ Esc : 게임 종료  ┃");
+                Console.SetCursorPosition(50, 17);
+                Console.Write("┗━━━━━━━━━━━━━━━━━━┛");
+
+                if (Console.KeyAvailable)
+                {
+                    var keyInfo = Console.ReadKey(true);
+                    if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                    if (keyInfo.Key == ConsoleKey.Escape)
+                    {
+                        Environment.Exit(0);
+                    }
+                }
+
+                Thread.Sleep(300);
+                Console.Clear();
+                cnt++;
             }
         }
     }
