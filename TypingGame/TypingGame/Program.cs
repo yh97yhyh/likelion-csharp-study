@@ -46,12 +46,14 @@ namespace TypingGame
         public int Score;
         public string UserInput;
         private static Random Rand = new Random();
+        public bool IsRunning;
 
         public Game()
         {
             SetItems();
             Score = 0;
             UserInput = "";
+            IsRunning = true;
         }
 
         private void SetItems()
@@ -87,15 +89,6 @@ namespace TypingGame
             }
         }
 
-        //public async Task GetUserInputAsync()
-        //{
-        //    Console.SetCursorPosition(0, GROUND_Y + 1);
-        //    //Console.Write("Enter a sentence 👉 ");
-        //    //Console.SetCursorPosition(25, GROUND_Y + 1);
-        //    UserInput = await Task.Run(() => Console.ReadLine());
-        //    CheckClear();
-        //}
-
         public async Task GetUserInputAsync()
         {
             Console.SetCursorPosition(0, GROUND_Y + 1);
@@ -124,12 +117,11 @@ namespace TypingGame
                 //}
             }
 
-            CheckClear();
+            CheckSuccess();
         }
 
 
-
-        public void CheckClear()
+        public void CheckSuccess()
         {
             Console.SetCursorPosition(0, GROUND_Y + 1);
             Console.Write(new string(' ', Console.WindowWidth));
@@ -215,7 +207,8 @@ namespace TypingGame
             }
             Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
-            Environment.Exit(0);
+            //Environment.Exit(0);
+            IsRunning = false;
         }
 
         private void GameClear()
@@ -237,7 +230,8 @@ namespace TypingGame
             }
             Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
-            Environment.Exit(0);
+            //Environment.Exit(0);
+            IsRunning = false;
         }
 
         private List<string> SetSentences()
@@ -298,7 +292,7 @@ namespace TypingGame
             Console.Clear();
             SplashGame();
 
-            while (true)
+            while (game.IsRunning)
             {
                 if (dwTime + 1000 < Environment.TickCount)
                 {
