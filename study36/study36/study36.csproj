@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9E72F626-636A-4CB9-A8CE-1207E05676D1}</ProjectGuid>
+    <ProjectGuid>{E9980347-37F3-4F32-B988-7895C40C5A16}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>TextRPGRefact</RootNamespace>
-    <AssemblyName>TextRPGRefact</AssemblyName>
+    <RootNamespace>study36</RootNamespace>
+    <AssemblyName>study36</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,11 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Field.cs" />
-    <Compile Include="Character.cs" />
-    <Compile Include="MainGame.cs" />
-    <Compile Include="Monster.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

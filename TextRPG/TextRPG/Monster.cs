@@ -15,11 +15,6 @@ namespace TextRPG
             MonsterInfo.Hp -= attack;
         }
 
-        //public void SetMonster(Info monster)
-        //{
-        //    MonsterInfo = monster;
-        //}
-
         public void ShowPlayerInfo()
         {
             Console.WriteLine("========= 몬스터 정보 =========");

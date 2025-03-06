@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace TextRPG
+namespace TextRPGRefact
 {
     class Field
     {
@@ -19,7 +20,7 @@ namespace TextRPG
             {
                 Console.Clear();
 
-                CurPlayer.ShowPlayerInfo();
+                CurPlayer.ShowInfo();
 
                 Console.WriteLine("1. 초보필드 | 2. 중수필드 | 3. 고수필드 | 4. 전단계");
                 input = int.Parse(Console.ReadLine());
@@ -34,8 +35,6 @@ namespace TextRPG
                     CreateMonster(input);
                     Fight();
                 }
-
-                
             }
         }
 
@@ -44,64 +43,65 @@ namespace TextRPG
             switch (input)
             {
                 case 1:
-                    CurMonster = Create("초보몹", 30, 3);
+                    CurMonster = new Monster("초보몬스터", 3, 30);
                     break;
                 case 2:
-                    CurMonster = Create("중수몹", 60, 6);
+                    CurMonster = new Monster("중수몬스터", 6, 60);
                     break;
                 case 3:
-                    CurMonster = Create("고수몹", 90, 9);
+                    CurMonster = new Monster("고수몬스터", 9, 90);
                     break;
                 default:
                     break;
             }
-        }
 
-        public Monster Create(string name, int hp, int attack)
-        {
-            var monster = new Monster();
-            var monsterInfo = new Info();
-
-            monsterInfo.Name = name;
-            monsterInfo.Hp = hp;
-            monsterInfo.Attack = attack;
-
-            monster.MonsterInfo = monsterInfo;
-
-            return monster;
         }
 
         public void Fight()
         {
-            int input = 0;
-            
+            var input = 0;
+
             while (true)
             {
                 Console.Clear();
-
-                CurPlayer.ShowPlayerInfo();
-                CurMonster.ShowPlayerInfo();
+                
+                CurPlayer.ShowInfo();
+                CurMonster.ShowInfo();
 
                 Console.WriteLine("1. 공격 | 2. 도망");
                 input = int.Parse(Console.ReadLine());
 
                 if (input == 1)
                 {
-                    CurPlayer.TakeDamage(CurMonster.MonsterInfo.Attack);
-                    CurMonster.TakeDamage(CurPlayer.PlayerInfo.Attack);
+                    CurPlayer.TakeDamage(CurMonster.Attack);
+                    CurMonster.TakeDamage(CurPlayer.Attack);
 
-                    if (CurPlayer.PlayerInfo.Hp <= 0)
+                    Console.WriteLine("공격!");
+                    Thread.Sleep(500);
+
+                    if (CurPlayer.Hp <= 0)
                     {
+                        Console.WriteLine("사망하였습니다.. 부활합니다.");
+                        Thread.Sleep(1000);
                         CurPlayer.ResetHp(100);
                         break;
                     }
                 }
 
-                if (input == 2 || CurMonster.MonsterInfo.Hp <= 0)
+                if (input == 2)
                 {
-                    CurMonster = null;
+                    Console.WriteLine("도망쳤습니다...");
+                    Thread.Sleep(1000);
                     break;
                 }
+
+                if (CurMonster.Hp <= 0)
+                {
+                    Console.WriteLine("승리하였습니다! ");
+                    Thread.Sleep(1000);
+                    break;
+                }
+
             }
         }
     }
