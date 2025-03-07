@@ -24,14 +24,14 @@ namespace TextRPGRefact
             Hp = hp;
         }
 
-        public virtual void ShowInfo()
-        {
-            
-        }
-
         public void TakeDamage(int attack)
         {
             Hp -= attack;
+        }
+
+        public virtual void ShowInfo()
+        {
+            
         }
     }
 }

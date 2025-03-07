@@ -35,7 +35,6 @@ namespace TextRPG
                     Fight();
                 }
 
-                
             }
         }
 
