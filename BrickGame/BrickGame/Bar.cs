@@ -40,7 +40,7 @@ namespace BrickGame
 
                 switch (input)
                 {
-                    case LEFT_KEY: // 왼쪽 
+                    case LEFT_KEY:
                         if (MyBarData.Xs[0] > 1)
                         {
                             MyBarData.Xs[0]--;
