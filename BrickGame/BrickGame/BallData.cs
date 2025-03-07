@@ -19,7 +19,7 @@ namespace BrickGame
     class BallData
     {
         public bool IsReady { get; set; } // 움직임 false 안움직임 true
-        public Direction Direct { get; set; }
+        public Direction CurDirection { get; set; }
 
         public int X { get; set; }
         public int Y { get; set; }

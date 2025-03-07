@@ -11,12 +11,13 @@ namespace BrickGame
         public BallData MyBallData { get; set; }
         public int[,] WallCollision { get; set; }
         public Bar MyBar { get; set; }
+        public List<Brick> MyBricks { get; set; }
 
         public Ball()
         {
             MyBallData = new BallData();
             MyBallData.IsReady = false;
-            MyBallData.Direct = Direction.UpRight;
+            MyBallData.CurDirection = Direction.UpRight;
             MyBallData.X = 30;
             MyBallData.Y = 10;
             WallCollision = new int[4, 6] // 벽면4 방향6
@@ -32,7 +33,7 @@ namespace BrickGame
         {
             if (MyBallData.IsReady == false)
             {
-                switch (MyBallData.Direct)
+                switch (MyBallData.CurDirection)
                 {
                     case Direction.Up:
                         if (!Collide(MyBallData.X, MyBallData.Y - 1))
@@ -82,42 +83,43 @@ namespace BrickGame
 
         public bool Collide(int x, int y)
         {
+            // 벽 충돌 처리
             if (y == 0)
             {
-                MyBallData.Direct = (Direction)WallCollision[0, (int)MyBallData.Direct];
+                MyBallData.CurDirection = (Direction)WallCollision[0, (int)MyBallData.CurDirection];
                 return true;
             }
 
             if (x == 1)
             {
-                MyBallData.Direct = (Direction)WallCollision[1, (int)MyBallData.Direct];
+                MyBallData.CurDirection = (Direction)WallCollision[1, (int)MyBallData.CurDirection];
                 return true;
             }
 
             if (x == 77)
             {
-                MyBallData.Direct = (Direction)WallCollision[2, (int)MyBallData.Direct];
+                MyBallData.CurDirection = (Direction)WallCollision[2, (int)MyBallData.CurDirection];
                 return true;
             }
 
             if (y == 23)
             {
-                MyBallData.Direct = (Direction)WallCollision[3, (int)MyBallData.Direct];
+                MyBallData.CurDirection = (Direction)WallCollision[3, (int)MyBallData.CurDirection];
                 return true;
             }
 
-            //Bar충돌처리
+            // Bar 충돌 처리
             if (x >= MyBar.MyBarData.Xs[0] && x <= MyBar.MyBarData.Xs[2] + 1 && 
                 y == MyBar.MyBarData.Y) //바 위 충돌
             {
-                if (MyBallData.Direct == Direction.UpRight)
-                    MyBallData.Direct = Direction.DownRight;
-                else if (MyBallData.Direct == Direction.DownRight)
-                    MyBallData.Direct = Direction.UpRight;
-                else if (MyBallData.Direct == Direction.UpLeft)
-                    MyBallData.Direct = Direction.DownLeft;
-                else if (MyBallData.Direct == Direction.DownLeft)
-                    MyBallData.Direct = Direction.UpLeft;
+                if (MyBallData.CurDirection == Direction.UpRight)
+                    MyBallData.CurDirection = Direction.DownRight;
+                else if (MyBallData.CurDirection == Direction.DownRight)
+                    MyBallData.CurDirection = Direction.UpRight;
+                else if (MyBallData.CurDirection == Direction.UpLeft)
+                    MyBallData.CurDirection = Direction.DownLeft;
+                else if (MyBallData.CurDirection == Direction.DownLeft)
+                    MyBallData.CurDirection = Direction.UpLeft;
 
                 return true;
             }
@@ -125,16 +127,57 @@ namespace BrickGame
             if (x >= MyBar.MyBarData.Xs[0] && x <= MyBar.MyBarData.Xs[2] + 1 &&
                 y == MyBar.MyBarData.Y + 1) //바 아래 충돌
             {
-                if (MyBallData.Direct == Direction.UpRight)
-                    MyBallData.Direct = Direction.DownRight;
-                else if (MyBallData.Direct == Direction.DownRight)
-                    MyBallData.Direct = Direction.UpRight;
-                else if (MyBallData.Direct == Direction.UpLeft)
-                    MyBallData.Direct = Direction.DownLeft;
-                else if (MyBallData.Direct == Direction.DownLeft)
-                    MyBallData.Direct = Direction.UpLeft;
+                if (MyBallData.CurDirection == Direction.UpRight)
+                    MyBallData.CurDirection = Direction.DownRight;
+                else if (MyBallData.CurDirection == Direction.DownRight)
+                    MyBallData.CurDirection = Direction.UpRight;
+                else if (MyBallData.CurDirection == Direction.UpLeft)
+                    MyBallData.CurDirection = Direction.DownLeft;
+                else if (MyBallData.CurDirection == Direction.DownLeft)
+                    MyBallData.CurDirection = Direction.UpLeft;
 
                 return true;
+            }
+
+            // Brick 충돌 처리
+            foreach (var brick in MyBricks)
+            {
+                if (!brick.IsAlive)
+                {
+                    continue;
+                }
+
+                if (x >= brick.Xs[0] && x <= brick.Xs[2] + 1 &&
+                y == brick.Y) // 벽 위쪽 충돌
+                {
+                    if (MyBallData.CurDirection == Direction.UpRight)
+                        MyBallData.CurDirection = Direction.DownRight;
+                    else if (MyBallData.CurDirection == Direction.DownRight)
+                        MyBallData.CurDirection = Direction.UpRight;
+                    else if (MyBallData.CurDirection == Direction.UpLeft)
+                        MyBallData.CurDirection = Direction.DownLeft;
+                    else if (MyBallData.CurDirection == Direction.DownLeft)
+                        MyBallData.CurDirection = Direction.UpLeft;
+
+                    brick.IsAlive = false;
+                    return true;
+                }
+
+                if (x >= brick.Xs[0] && x <= brick.Xs[2] + 1 &&
+                y == brick.Y + 1) //벽 아래 충돌
+                {
+                    if (MyBallData.CurDirection == Direction.UpRight)
+                        MyBallData.CurDirection = Direction.DownRight;
+                    else if (MyBallData.CurDirection == Direction.DownRight)
+                        MyBallData.CurDirection = Direction.UpRight;
+                    else if (MyBallData.CurDirection == Direction.UpLeft)
+                        MyBallData.CurDirection = Direction.DownLeft;
+                    else if (MyBallData.CurDirection == Direction.DownLeft)
+                        MyBallData.CurDirection = Direction.UpLeft;
+
+                    brick.IsAlive = false;
+                    return true;
+                }
             }
 
             return false;
@@ -147,8 +190,6 @@ namespace BrickGame
             Program.GotoXy(MyBallData.X, MyBallData.Y);
             Console.Write("●");
         }
-
-        public void Release() { }
 
         public void ScreenWall()
         {

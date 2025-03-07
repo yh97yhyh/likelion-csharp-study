@@ -95,6 +95,5 @@ namespace BrickGame
             }
         }
 
-        public void Release() { }
     }
 }

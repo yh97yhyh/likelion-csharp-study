@@ -47,6 +47,7 @@
     <Compile Include="BallData.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="BarData.cs" />
+    <Compile Include="Brick.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

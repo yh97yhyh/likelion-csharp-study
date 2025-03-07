@@ -15,5 +15,6 @@ namespace BrickGame
         {
             Xs = new int[3];
         }
+
     }
 }

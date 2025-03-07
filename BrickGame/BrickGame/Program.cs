@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickGame
@@ -24,6 +25,8 @@ namespace BrickGame
             Console.SetWindowSize(80, 25);
             Console.SetBufferSize(80, 25);
             Console.CursorVisible = false;
+
+            Thread.Sleep(2000);
 
             var gameManger = new GameManager();
 
