@@ -8,14 +8,16 @@ namespace BrickGame
 {
     class Bar
     {
-        public BarData MyBarData = new BarData();
-        public int m_nCatch; //공을 잡았는지 체크
+        public BarData MyBarData { get; set; }
+        public bool IsCatch { get; set; }// 공을 잡았는지 체크
 
-        const int LEFTKEY = 75; // 상수로 만들어준다.  변수에 값 대입 x
+        const int LEFT_KEY = 75; // 상수로 만들어준다.변수에 값 대입 x
+        const int RIGHT_KEY = 77;
 
         public Bar()
         {
-            m_nCatch = 0;
+            MyBarData = new BarData();
+            IsCatch = false; // 초기값 false로 설정
 
             MyBarData.Y = 18;
             MyBarData.Xs[0] = 12;
@@ -23,43 +25,53 @@ namespace BrickGame
             MyBarData.Xs[2] = 16;
         }
 
-        //공의 객체를 가지고와서 잡았는지 판단, 움직임
+        // 공의 객체를 가지고와서 잡았는지 판단, 움직임
         public void Progress(Ball ball)
         {
             int input = 0;
 
             if (Console.KeyAvailable)
             {
-                input = Program._getch(); //키눌림 값
+                input = Program._getch(); // 키눌림 값
+                if (input == 0 || input == 224) // 화살표 키 또는 특수 키 감지
+                {
+                    input = Program._getch(); // 실제 키 값 읽기
+                }
 
                 switch (input)
                 {
-                    case LEFTKEY: //왼쪽 
-                        MyBarData.Xs[0]--;
-                        MyBarData.Xs[1]--;
-                        MyBarData.Xs[2]--;
-
-                        if (ball.MyBallData.IsReady && m_nCatch == 1)
+                    case LEFT_KEY: // 왼쪽 
+                        if (MyBarData.Xs[0] > 1)
                         {
-                            //공이 잡힌상태
-                            ball.MyBallData.X -= 1; //공왼쪽으로 움직이게 값주기
+                            MyBarData.Xs[0]--;
+                            MyBarData.Xs[1]--;
+                            MyBarData.Xs[2]--;
+                        }
+
+                        if (ball.MyBallData.IsReady && IsCatch)
+                        {
+                            // 공이 잡힌 상태
+                            ball.MyBallData.X -= 1; // 공 왼쪽으로 움직이게 값 주기
                         }
 
                         break;
-                    case 77:
-                        MyBarData.Xs[0]++;
-                        MyBarData.Xs[1]++;
-                        MyBarData.Xs[2]++;
-
-                        if (ball.MyBallData.IsReady && m_nCatch == 1)
+                    case RIGHT_KEY:
+                        if (MyBarData.Xs[2] + 1 < 79)
                         {
-                            //공이 잡힌상태
-                            ball.MyBallData.X = 1;//공오른쪽으로 움직이게 값주기
+                            MyBarData.Xs[0]++;
+                            MyBarData.Xs[1]++;
+                            MyBarData.Xs[2]++;
+                        }
+
+                        if (ball.MyBallData.IsReady && IsCatch)
+                        {
+                            // 공이 잡힌 상태
+                            ball.MyBallData.X += 1; // 공 오른쪽으로 움직이게 값 주기
                         }
                         break;
                     case 'a':
-                        ball.MyBallData.IsReady = false; //공이움직임 
-                        m_nCatch = 0;
+                        ball.MyBallData.IsReady = false; // 공이 움직임 
+                        IsCatch = false; // 공을 놓음
                         break;
                     case 's':
                         if (ball.MyBallData.X >= MyBarData.Xs[0] &&
@@ -67,7 +79,7 @@ namespace BrickGame
                             ball.MyBallData.Y == (MyBarData.Y - 1))
                         {
                             ball.MyBallData.IsReady = true;
-                            m_nCatch = 1;
+                            IsCatch = true; // 공을 잡음
                         }
                         break;
                 }
@@ -82,9 +94,7 @@ namespace BrickGame
                 Console.Write("▥");
             }
         }
-        public void Release()
-        { }
 
+        public void Release() { }
     }
-
 }
