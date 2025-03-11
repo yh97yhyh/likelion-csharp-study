@@ -54,30 +54,6 @@ namespace BrickGame
                 var brick = new Brick(xs, y);
                 MyBricks.Add(brick);
             }
-
-            //var createdXy = new List<(int, int)>();
-
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    var x = 2;
-            //    var y = 2;
-
-            //    while (true)
-            //    {
-            //        x = Rand.Next(2, 75);
-            //        y = Rand.Next(2, 15);
-
-            //        if (!createdXy.Contains((x, y)))
-            //        {
-            //            createdXy.Add((x, y));
-            //            break;
-            //        }
-            //    }
-            //    var xs = new int[] { x, x + 1, x + 2 };
-
-            //    var brick = new Brick(xs, y);
-            //    MyBricks.Add(brick);
-            //}
         }
 
         public void Progress()
